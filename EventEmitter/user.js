@@ -26,3 +26,5 @@ emitter.off('welcome', greet);
 console.log("Removed the greet event")
 // Emit again (no output now, since listener is removed)
 emitter.emit('welcome', 'Ankit');
+
+

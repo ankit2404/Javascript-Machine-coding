@@ -1,42 +1,41 @@
-export class EventEmitter {
+export default class EventEmitter {
   constructor() {
-    // Stores event names as keys and arrays of listener functions as values
     this.events = {};
   }
 
-  // Method to register a listener for an event
   on(eventName, listener) {
-    // If the event does not exist yet, initialize it with an empty array
-    if (!this.events[eventName]) {
-      this.events[eventName] = [];
+    if(! this.events[eventName] ){
+      this.events[eventName] = []
     }
-
-    // Add the listener function to the list for this event
-    this.events[eventName].push(listener);
+    this.events[eventName].push(listener)
+    return this
   }
 
-  // Method to emit (trigger) an event and pass data to listeners
-  emit(eventName, data) {
-    const listeners = this.events[eventName];
 
-    if (listeners) {
-      // Call each listener function with the provided data
-      listeners.forEach((listener) => {
-        listener(data);
-      });
+  off(eventName, listener) {
+    if(! this.events[eventName] ){
+      return this
     }
+    const list = this.events[eventName];
+    
+    const index = list.indexOf(listener);
+    if (index !== -1) {
+      this.events[eventName].splice(index, 1); // remove only one
+    }
+    return this
+
   }
 
-  // Method to remove a specific listener for an event
-  off(eventName, listenerToRemove) {
-    const listeners = this.events[eventName];
-
-    if (listeners) {
-      this.events[eventName] = listeners.filter(
-        (listener) => listener !== listenerToRemove
-      );
+  emit(eventName, ...args) {
+    if(! this.events[eventName]  || this.events[eventName].length === 0){
+      return false
     }
+    const list = this.events[eventName].slice();
+    
+      list.forEach((item) => {
+        item.apply(null,args)
+      })
+    
+    return true
   }
 }
-
-
